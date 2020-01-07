@@ -20,8 +20,9 @@
 Аксапта позволяет записывать литералы raw-строк. Однако внутри raw-строки оступы никак не учитываются. А хотелось бы.
 Особенно для SQL-команд, которые потом приходится видеть в `SQL Management Studio`.
 
-Детальное описание проблемы можно найти в [JEP 355: Text Blocks](https://openjdk.java.net/jeps/355), а краткую спецификацию
-в описании функции [trimIdent](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/trim-indent.html).
+> Детальное описание проблемы можно найти в [JEP 355: Text Blocks](https://openjdk.java.net/jeps/355), а краткую спецификацию
+в описании функции [trimIdent](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/trim-indent.html)
+для [Kotlin](https://kotlinlang.org/).
 
 Метод `trimIdent`:
 
@@ -50,30 +51,30 @@ info(withoutIndent); // ABC\n123\n456
 ```java
 // Create the SQL Server Instead Of Trigger
 createTriggerSQL = String::trimIdent(@"
-						CREATE TRIGGER [dbo].[ShipCarrierStagingInsTrig] ON [dbo].[%1] INSTEAD OF INSERT AS
-						BEGIN
-							DECLARE @RecId AS bigint
-							SELECT @RecId = max(RecId) FROM %1 WITH (UPDLOCK, HOLDLOCK)
-							IF @RecId IS NULL BEGIN  SELECT @RecId = 0  END
-							INSERT INTO %1
-								(%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,
-								 %12,%13,%14,%15,%16,%17,%18,%19)
-							select
-								%2,%3,ISNULL(%4,''),getdate(),
-								case
-									when ISNULL(%6,0.0) != 0.0 then %6
-									else
-										cast(
-											case
-												when %20 is null then '0.0'
-												when %20 = '' then '0.0'
-												else %20
-											end
-										as numeric(28,12))
-								end,
-								....
-						END
-						");
+            CREATE TRIGGER [dbo].[ShipCarrierStagingInsTrig] ON [dbo].[%1] INSTEAD OF INSERT AS
+            BEGIN
+                DECLARE @RecId AS bigint
+                SELECT @RecId = max(RecId) FROM %1 WITH (UPDLOCK, HOLDLOCK)
+                IF @RecId IS NULL BEGIN  SELECT @RecId = 0  END
+                INSERT INTO %1
+                    (%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,
+                        %12,%13,%14,%15,%16,%17,%18,%19)
+                select
+                    %2,%3,ISNULL(%4,''),getdate(),
+                    case
+                        when ISNULL(%6,0.0) != 0.0 then %6
+                        else
+                            cast(
+                                case
+                                    when %20 is null then '0.0'
+                                    when %20 = '' then '0.0'
+                                    else %20
+                                end
+                            as numeric(28,12))
+                    end,
+                    ....
+            END
+            ");
 ```
 <!-- markdownlint-enable MD010 -->
 

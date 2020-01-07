@@ -1,0 +1,47 @@
+﻿//
+// mazzy, https://github.com/mazzy-ax/SysString
+//
+class String
+{
+
+    //
+    // mazzy, https://github.com/mazzy-ax/SysString
+    //
+    // рассчитывает отступ, который применим для каждой строки в многострочном тексте
+    // табуляцию рассматривает как непробельный значащий символ
+    public static int calcIdent(str s)
+    {
+        SysText     text    = SysText::construct(s);
+        int         ident   = SysText::calcIdent(text);
+
+        return ident;
+    }
+
+    //
+    // mazzy, https://github.com/mazzy-ax/SysString
+    //
+    // добавляет или удаляет отступ, который применим для каждой строки в многострочном тексте
+    // табуляцию рассматривает как непробельный значащий символ
+    public static str changeIdent(str s, int identOffset)
+    {
+        SysText     text    = SysText::construct(s);
+        str         ret     = SysText::changeIdent(text, identOffset).getText();
+
+        return ret;
+    }
+
+    //
+    // mazzy, https://github.com/mazzy-ax/SysString
+    //
+    // удаляет отступ, который применим для каждой строки в многострочном тексте
+    // табуляцию рассматривает как непробельный значащий символ
+    // работает как trimIdent в Kotlin, https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/trim-indent.html
+    // см. также https://openjdk.java.net/jeps/355
+    public static str trimIdent(str s)
+    {
+        SysText     text    = SysText::construct(s);
+        str         ret     = SysText::trimIdent(text).getText();
+
+        return ret;
+    }
+}

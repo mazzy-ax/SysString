@@ -1,0 +1,201 @@
+﻿//
+// mazzy, https://github.com/mazzy-ax/SysString
+//
+class SysText extends TextBuffer
+{
+
+    //
+    // mazzy, https://github.com/mazzy-ax/SysString
+    //
+    // используем toString родителя, чтобы отображать в отладчике
+    public str toString()
+    {
+        str ret = super();
+
+        return ret;
+    }
+
+    //
+    // mazzy, https://github.com/mazzy-ax/SysString
+    //
+    // рассчитывает отступ, который применим для каждой строки в многострочном тексте
+    // табуляцию рассматривает как непробельный значащий символ
+    public static int calcIdent(TextBuffer text)
+    {
+        int ident;
+        int lineIdent = 0;
+        int startPos = 1;
+
+        if( text == null )
+            return 0;
+
+        if( text.size() == 0 )
+            return 0;
+
+        ident = maxint();
+
+        ///////////////////
+        if( text.find('< +') )
+        {
+            lineIdent = text.matchLen();
+            startPos = text.matchPos() + text.matchLen();
+        }
+
+        while( text.find('\n *', startPos) )
+        {
+            if( lineIdent < ident && startPos != text.matchPos() )
+            {
+                ident = lineIdent;
+            }
+
+            lineIdent = text.matchLen() - 1;
+            startPos = text.matchPos() + text.matchLen();
+        }
+
+        if( lineIdent < ident && startPos <= text.size() )
+        {
+            ident = lineIdent;
+        }
+        else if( ident == maxint() )
+        {
+            ident = 0; //lineIdent;
+        }
+
+        return ident;
+    }
+
+    //
+    // mazzy, https://github.com/mazzy-ax/SysString
+    //
+    // добавляет или удаляет отступ, который применим для каждой строки в многострочном тексте
+    // табуляцию рассматривает как непробельный значащий символ
+    public static TextBuffer changeIdent(TextBuffer text, int identOffset)
+    {
+        TextBuffer ret = new TextBuffer();
+        int startPos = 1;
+        str ident = '';
+        int lineIdent;
+        str s;
+
+        if( text == null )
+            return ret;
+
+        if( text.size() == 0 )
+            return ret;
+
+        /////////////////////
+        if( identOffset > 0 )
+        {
+            ident = strrep(' ', identOffset);
+            identOffset = 0;
+        }
+        else
+        {
+            identOffset = -identOffset;
+        }
+
+        if( text.find('< +') )
+        {
+            lineIdent = max(0, text.matchLen() - identOffset);
+            startPos = text.matchPos() + text.matchLen();
+        }
+
+        while( text.find('\n *', startPos) )
+        {
+            if( startPos <= text.matchPos() )
+            {
+                s = text.subStr(startPos - lineIdent, text.matchPos() - startPos + lineIdent + 1);
+            }
+            else
+            {
+                s = '\n';
+            }
+            ret.appendText(s);
+
+            if( ident )
+            {
+                ret.appendText(ident);
+            }
+
+            lineIdent = max(0, text.matchLen() - 1 - identOffset);
+            startPos = text.matchPos() + text.matchLen();
+        }
+
+        if( startPos <= text.size() )
+        {
+            s = text.subStr(startPos - lineIdent, text.size() - startPos + lineIdent + 1);
+            ret.appendText(s);
+        }
+
+        return ret;
+    }
+
+    //
+    // mazzy, https://github.com/mazzy-ax/SysString
+    //
+    public static SysText construct(str s = '')
+    {
+        SysText text = new SysText();
+
+        if( s )
+        {
+            text.setText(s);
+        }
+
+        return text;
+    }
+
+    //
+    // mazzy, https://github.com/mazzy-ax/SysString
+    //
+    public static SysText fromTextBuffer(TextBuffer _text)
+    {
+        SysText text = new SysText();
+
+        if( _text && _text.size() )
+        {
+            text.setText(_text.getText());
+        }
+
+        return text;
+    }
+
+    //
+    // mazzy, https://github.com/mazzy-ax/SysString
+    //
+    // удаляет отступ, который применим для каждой строки в многострочном тексте
+    // табуляцию рассматривает как непробельный значащий символ
+    // работает как trimIdent в Kotlin, https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/trim-indent.html
+    // см. также https://openjdk.java.net/jeps/355
+    public static TextBuffer trimIdent(TextBuffer text)
+    {
+        TextBuffer  ret         = new TextBuffer();
+        int         startPos    = 1;
+        int         endPos;
+        int         ident;
+    ;
+        if( text == null )
+            return ret;
+
+        if( text.size() == 0 )
+            return ret;
+
+        endPos = text.size();
+        ident = SysText::calcIdent(text);
+
+        // удаляем первую пустую или пробельную строку
+        if( text.find('< *\n') )
+            startPos = text.matchPos() + text.matchLen();
+
+        // удаляем последнюю пустую или пробельную строку
+        if( text.find('\n *>') )
+            endPos = text.matchPos() - 1;
+
+        // TODO можно ли обойтись без копирования текста, а просто передать startPos, endPos в changeIdent?
+        ret = SysText::construct(text.subStr(startPos, endPos - startPos + 1));
+
+        ret = SysText::changeIdent(ret, -ident);
+
+        return ret;
+    }
+}

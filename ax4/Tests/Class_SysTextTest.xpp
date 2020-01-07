@@ -1,0 +1,353 @@
+﻿//
+// mazzy, https://github.com/mazzy-ax/SysString
+//
+class SysTextTest extends SysTestCase
+{
+
+    void testCalcIdent()
+    {
+        SysText text = SysText::construct(@'
+                    ABC
+                        123
+                    456
+        ');
+
+        this.assertEquals(16, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_1()
+    {
+        SysText text = SysText::construct(@'  ABC');
+
+        this.assertEquals(2, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_1_Blank()
+    {
+        SysText text = SysText::construct(@'  ');
+
+        this.assertEquals(0, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_1_NoIdent()
+    {
+        SysText text = SysText::construct(@'ABC  ');
+
+        this.assertEquals(0, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_2_Blank()
+    {
+        SysText text = SysText::construct(@'
+        ');
+
+        this.assertEquals(0, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_3_Blank()
+    {
+        SysText text = SysText::construct(@'
+
+        ');
+
+        this.assertEquals(0, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_4_Blank()
+    {
+        SysText text = SysText::construct(@'
+
+
+        ');
+
+        this.assertEquals(0, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_Blank()
+    {
+        SysText text = SysText::construct(@'
+                    ABC
+
+                        123
+                    456
+        ');
+
+        this.assertEquals(16, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_Disorder()
+    {
+        SysText text = SysText::construct(@'
+                     ABC
+                      123
+                   456
+            ');
+
+        this.assertEquals(15, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_Empty()
+    {
+        SysText text = SysText::construct('');
+
+        this.assertEquals(0, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_First()
+    {
+        SysText text = SysText::construct(@'  ABC
+                    123
+                    456
+            ');
+
+        this.assertEquals(2, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_First_NoIdent()
+    {
+        SysText text = SysText::construct(@'0  ABC
+                    123
+                    456
+            ');
+
+        this.assertEquals(0, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_Last()
+    {
+        SysText text = SysText::construct(@'
+                    ABC
+                    123
+        456');
+
+        this.assertEquals(4, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_NoIdent()
+    {
+        SysText text = SysText::construct(@'
+    ABC
+    123
+    456
+            ');
+
+        this.assertEquals(0, SysText::calcIdent(text));
+    }
+
+    void testCalcIdent_Null()
+    {
+        this.assertEquals(0, SysText::calcIdent(null));
+    }
+
+    void testChangeIdent()
+    {
+        SysText text = SysText::construct(@'
+        ABC
+            123
+        456
+        ');
+
+        this.assertEquals('\nABC\n    123\n456\n', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testChangeIdent_1()
+    {
+        SysText text = SysText::construct(@'  ABC');
+
+        this.assertEquals('ABC', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testChangeIdent_1_Blank()
+    {
+        SysText text = SysText::construct(@'  ');
+
+        this.assertEquals('', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testChangeIdent_1_NoIdent()
+    {
+        SysText text = SysText::construct(@'ABC  ');
+
+        this.assertEquals('ABC  ', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testChangeIdent_Blank()
+    {
+        SysText text = SysText::construct(@'
+        ABC
+
+            123
+    456
+        ');
+
+        this.assertEquals('\nABC\n\n    123\n456\n', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testChangeIdent_Empty()
+    {
+        SysText text = SysText::construct('');
+
+        this.assertEquals('', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testChangeIdent_First()
+    {
+        SysText text = SysText::construct(@'  ABC
+        123
+        456
+    ');
+
+        this.assertEquals('ABC\n123\n456\n', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testChangeIdent_Last()
+    {
+        SysText text = SysText::construct(@'ABC
+        123
+        456  ');
+
+        this.assertEquals('ABC\n123\n456  ', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testChangeIdent_Null()
+    {
+        this.assertEquals('', SysText::changeIdent(null, -4).getText());
+    }
+
+    void testChangeIdent_OverIdent()
+    {
+        SysText text = SysText::construct(@'
+        ABC
+            123
+    456
+        ');
+
+        this.assertEquals('\nABC\n    123\n456\n', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testChangeIdent_UnderIdent()
+    {
+        SysText text = SysText::construct(@'
+            ABC
+                123
+            456
+        ');
+
+        this.assertEquals('\n    ABC\n        123\n    456\n', SysText::changeIdent(text, -4).getText());
+    }
+
+    void testTrimIdent()
+    {
+        SysText text = SysText::construct(@'
+        ABC
+            123
+        456
+        ');
+
+        this.assertEquals('ABC\n    123\n456', SysText::trimIdent(text).getText());
+    }
+
+    void testTrimIdent_1()
+    {
+        SysText text = SysText::construct(@'  ABC');
+
+        this.assertEquals('ABC', SysText::trimIdent(text).getText());
+    }
+
+    void testTrimIdent_1_Blank()
+    {
+        SysText text = SysText::construct(@'  ');
+
+        str res = SysText::trimIdent(text).getText();
+
+        this.assertEquals(0, strlen(res));
+        this.assertEquals('', res);
+    }
+
+    void testTrimIdent_1_NoIdent()
+    {
+        SysText text = SysText::construct(@'ABC  ');
+
+        this.assertEquals('ABC  ', SysText::trimIdent(text).getText());
+    }
+
+    void testTrimIdent_2_Blank()
+    {
+        SysText text = SysText::construct(@'
+        ');
+
+        str res = SysText::trimIdent(text).getText();
+
+        this.assertEquals(0, strlen(res));
+        this.assertEquals('', res);
+    }
+
+    void testTrimIdent_3_Blank()
+    {
+        SysText text = SysText::construct(@'
+
+        ');
+
+        str res = SysText::trimIdent(text).getText();
+
+        this.assertEquals(0, strlen(res));
+        this.assertEquals('', res);
+    }
+
+    void testTrimIdent_4_Blank()
+    {
+        SysText text = SysText::construct(@'
+
+
+        ');
+
+        str res = SysText::trimIdent(text).getText();
+
+        this.assertEquals(1, strlen(res));
+        this.assertEquals(10, char2num(res, 1));
+        this.assertEquals('\n', res);
+    }
+
+    void testTrimIdent_BlankLine()
+    {
+        SysText text = SysText::construct(@'
+        ABC
+
+            123
+    456
+        ');
+
+        this.assertEquals('    ABC\n\n        123\n456', SysText::trimIdent(text).getText());
+    }
+
+    void testTrimIdent_Empty()
+    {
+        SysText text = SysText::construct('');
+
+        this.assertEquals('', SysText::trimIdent(text).getText());
+    }
+
+    void testTrimIdent_First()
+    {
+        SysText text = SysText::construct(@'  ABC
+        123
+        456
+    ');
+
+        this.assertEquals('ABC\n  123\n  456', SysText::trimIdent(text).getText());
+    }
+
+    void testTrimIdent_Last()
+    {
+        SysText text = SysText::construct(@'ABC
+        123
+        456  ');
+
+        this.assertEquals('ABC\n    123\n    456  ', SysText::trimIdent(text).getText());
+    }
+
+    void testTrimIdent_Null()
+    {
+        this.assertEquals('', SysText::trimIdent(null).getText());
+    }
+}

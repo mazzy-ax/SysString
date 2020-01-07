@@ -1,0 +1,298 @@
+﻿//
+// mazzy, https://github.com/mazzy-ax/SysString
+//
+class StringTest extends SysTestCase
+{
+
+    void testCalcIdent()
+    {
+        str s = @'
+                    ABC
+                        123
+                    456
+        ';
+
+        this.assertEquals(16, String::calcIdent(s));
+    }
+
+    void testCalcIdent_1()
+    {
+        str s = @'  ABC';
+
+        this.assertEquals(2, String::calcIdent(s));
+    }
+
+    void testCalcIdent_1_Blank()
+    {
+        str s = @'  ';
+
+        this.assertEquals(0, String::calcIdent(s));
+    }
+
+    void testCalcIdent_1_NoIdent()
+    {
+        str s = @'ABC  ';
+
+        this.assertEquals(0, String::calcIdent(s));
+    }
+
+    void testCalcIdent_2_Blank()
+    {
+        str s = @'
+        ';
+
+        this.assertEquals(0, String::calcIdent(s));
+    }
+
+    void testCalcIdent_3_Blank()
+    {
+        str s = @'
+
+        ';
+
+        this.assertEquals(0, String::calcIdent(s));
+    }
+
+    void testCalcIdent_4_Blank()
+    {
+        str s = @'
+
+
+        ';
+
+        this.assertEquals(0, String::calcIdent(s));
+    }
+
+    void testCalcIdent_Blank()
+    {
+        str s = @'
+                    ABC
+
+                        123
+                    456
+        ';
+
+        this.assertEquals(16, String::calcIdent(s));
+    }
+
+    void testCalcIdent_Disorder()
+    {
+        str s = @'
+                     ABC
+                      123
+                   456
+            ';
+
+        this.assertEquals(15, String::calcIdent(s));
+    }
+
+    void testCalcIdent_Empty()
+    {
+        str s = '';
+
+        this.assertEquals(0, String::calcIdent(s));
+    }
+
+    void testCalcIdent_First()
+    {
+        str s = @'  ABC
+                    123
+                    456
+            ';
+
+        this.assertEquals(2, String::calcIdent(s));
+    }
+
+    void testCalcIdent_First_NoIdent()
+    {
+        str s = @'0  ABC
+                    123
+                    456
+            ';
+
+        this.assertEquals(0, String::calcIdent(s));
+    }
+
+    void testCalcIdent_Last()
+    {
+        str s = @'
+                    ABC
+                    123
+        456';
+
+        this.assertEquals(4, String::calcIdent(s));
+    }
+
+    void testCalcIdent_NoIdent()
+    {
+        str s = @'
+    ABC
+    123
+    456
+            ';
+
+        this.assertEquals(0, String::calcIdent(s));
+    }
+
+    void testChangeIdent()
+    {
+        str s = @'
+        ABC
+            123
+        456
+        ';
+
+        this.assertEquals('\nABC\n    123\n456\n', String::changeIdent(s, -4));
+    }
+
+    void testChangeIdent_1()
+    {
+        str s = @'  ABC';
+
+        this.assertEquals('ABC', String::changeIdent(s, -4));
+    }
+
+    void testChangeIdent_1_Blank()
+    {
+        str s = @'  ';
+
+        this.assertEquals('', String::changeIdent(s, -4));
+    }
+
+    void testChangeIdent_1_NoIdent()
+    {
+        str s = @'ABC  ';
+
+        this.assertEquals('ABC  ', String::changeIdent(s, -4));
+    }
+
+    void testChangeIdent_Blank()
+    {
+        str s = @'
+        ABC
+
+            123
+    456
+        ';
+
+        this.assertEquals('\nABC\n\n    123\n456\n', String::changeIdent(s, -4));
+    }
+
+    void testChangeIdent_Empty()
+    {
+        str s = '';
+
+        this.assertEquals('', String::changeIdent(s, -4));
+    }
+
+    void testChangeIdent_First()
+    {
+        str s = @'  ABC
+        123
+        456
+    ';
+
+        this.assertEquals('ABC\n123\n456\n', String::changeIdent(s, -4));
+    }
+
+    void testChangeIdent_Last()
+    {
+        str s = @'ABC
+        123
+        456  ';
+
+        this.assertEquals('ABC\n123\n456  ', String::changeIdent(s, -4));
+    }
+
+    void testChangeIdent_OverIdent()
+    {
+        str s = @'
+        ABC
+            123
+    456
+        ';
+
+        this.assertEquals('\nABC\n    123\n456\n', String::changeIdent(s, -4));
+    }
+
+    void testChangeIdent_UnderIdent()
+    {
+        str s = @'
+            ABC
+                123
+            456
+        ';
+
+        this.assertEquals('\n    ABC\n        123\n    456\n', String::changeIdent(s, -4));
+    }
+
+    void testTrimIdent()
+    {
+        str s = @'
+        ABC
+            123
+        456
+        ';
+
+        this.assertEquals('ABC\n    123\n456', String::trimIdent(s));
+    }
+
+    void testTrimIdent_1()
+    {
+        str s = @'  ABC';
+
+        this.assertEquals('ABC', String::trimIdent(s));
+    }
+
+    void testTrimIdent_1_Blank()
+    {
+        str s = @'  ';
+
+        this.assertEquals('', String::trimIdent(s));
+    }
+
+    void testTrimIdent_1_NoIdent()
+    {
+        str s = @'ABC  ';
+
+        this.assertEquals('ABC  ', String::trimIdent(s));
+    }
+
+    void testTrimIdent_BlankLine()
+    {
+        str s = @'
+        ABC
+
+            123
+    456
+        ';
+
+        this.assertEquals('    ABC\n\n        123\n456', String::trimIdent(s));
+    }
+
+    void testTrimIdent_Empty()
+    {
+        str s = '';
+
+        this.assertEquals('', String::trimIdent(s));
+    }
+
+    void testTrimIdent_First()
+    {
+        str s = @'  ABC
+        123
+        456
+    ';
+
+        this.assertEquals('ABC\n  123\n  456', String::trimIdent(s));
+    }
+
+    void testTrimIdent_Last()
+    {
+        str s = @'ABC
+        123
+        456  ';
+
+        this.assertEquals('ABC\n    123\n    456  ', String::trimIdent(s));
+    }
+}

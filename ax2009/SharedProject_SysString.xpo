@@ -1,0 +1,1106 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: String unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #String
+    PROPERTIES
+      Name                #String
+      Extends             #
+      RunOn               #Called from
+    ENDPROPERTIES
+    
+    METHODS
+      Version: 3
+      SOURCE #classDeclaration
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #class String
+        #{
+        #}
+      ENDSOURCE
+      SOURCE #calcIdent
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #// рассчитывает отступ, который применим для каждой строки в многострочном тексте
+        #// табуляцию рассматривает как непробельный значащий символ
+        #public static int calcIdent(str s)
+        #{
+        #    SysText     text    = SysText::construct(s);
+        #    int         ident   = SysText::calcIdent(text);
+        #
+        #    return ident;
+        #}
+      ENDSOURCE
+      SOURCE #changeIdent
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #// добавляет или удаляет отступ, который применим для каждой строки в многострочном тексте
+        #// табуляцию рассматривает как непробельный значащий символ
+        #public static str changeIdent(str s, int identOffset)
+        #{
+        #    SysText     text    = SysText::construct(s);
+        #    str         ret     = SysText::changeIdent(text, identOffset).getText();
+        #
+        #    return ret;
+        #}
+      ENDSOURCE
+      SOURCE #trimIdent
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #// удаляет отступ, который применим для каждой строки в многострочном тексте
+        #// табуляцию рассматривает как непробельный значащий символ
+        #// работает как trimIdent в Kotlin, https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/trim-indent.html
+        #// см. также https://openjdk.java.net/jeps/355
+        #public static str trimIdent(str s)
+        #{
+        #    SysText     text    = SysText::construct(s);
+        #    str         ret     = SysText::trimIdent(text).getText();
+        #
+        #    return ret;
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: StringTest unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #StringTest
+    PROPERTIES
+      Name                #StringTest
+      Extends             #SysTestCase
+      RunOn               #Called from
+    ENDPROPERTIES
+    
+    METHODS
+      Version: 3
+      SOURCE #classDeclaration
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #class StringTest extends SysTestCase
+        #{
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent
+        #void testCalcIdent()
+        #{
+        #    str s = @'
+        #                ABC
+        #                    123
+        #                456
+        #    ';
+        #
+        #    this.assertEquals(16, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_1
+        #void testCalcIdent_1()
+        #{
+        #    str s = @'  ABC';
+        #
+        #    this.assertEquals(2, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_1_Blank
+        #void testCalcIdent_1_Blank()
+        #{
+        #    str s = @'  ';
+        #
+        #    this.assertEquals(0, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_1_NoIdent
+        #void testCalcIdent_1_NoIdent()
+        #{
+        #    str s = @'ABC  ';
+        #
+        #    this.assertEquals(0, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_2_Blank
+        #void testCalcIdent_2_Blank()
+        #{
+        #    str s = @'
+        #    ';
+        #
+        #    this.assertEquals(0, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_3_Blank
+        #void testCalcIdent_3_Blank()
+        #{
+        #    str s = @'
+        #
+        #    ';
+        #
+        #    this.assertEquals(0, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_4_Blank
+        #void testCalcIdent_4_Blank()
+        #{
+        #    str s = @'
+        #
+        #
+        #    ';
+        #
+        #    this.assertEquals(0, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_Blank
+        #void testCalcIdent_Blank()
+        #{
+        #    str s = @'
+        #                ABC
+        #
+        #                    123
+        #                456
+        #    ';
+        #
+        #    this.assertEquals(16, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_Disorder
+        #void testCalcIdent_Disorder()
+        #{
+        #    str s = @'
+        #                 ABC
+        #                  123
+        #               456
+        #        ';
+        #
+        #    this.assertEquals(15, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_Empty
+        #void testCalcIdent_Empty()
+        #{
+        #    str s = '';
+        #
+        #    this.assertEquals(0, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_First
+        #void testCalcIdent_First()
+        #{
+        #    str s = @'  ABC
+        #                123
+        #                456
+        #        ';
+        #
+        #    this.assertEquals(2, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_First_NoIdent
+        #void testCalcIdent_First_NoIdent()
+        #{
+        #    str s = @'0  ABC
+        #                123
+        #                456
+        #        ';
+        #
+        #    this.assertEquals(0, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_Last
+        #void testCalcIdent_Last()
+        #{
+        #    str s = @'
+        #                ABC
+        #                123
+        #    456';
+        #
+        #    this.assertEquals(4, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_NoIdent
+        #void testCalcIdent_NoIdent()
+        #{
+        #    str s = @'
+        #ABC
+        #123
+        #456
+        #        ';
+        #
+        #    this.assertEquals(0, String::calcIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent
+        #void testChangeIdent()
+        #{
+        #    str s = @'
+        #    ABC
+        #        123
+        #    456
+        #    ';
+        #
+        #    this.assertEquals('\nABC\n    123\n456\n', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_1
+        #void testChangeIdent_1()
+        #{
+        #    str s = @'  ABC';
+        #
+        #    this.assertEquals('ABC', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_1_Blank
+        #void testChangeIdent_1_Blank()
+        #{
+        #    str s = @'  ';
+        #
+        #    this.assertEquals('', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_1_NoIdent
+        #void testChangeIdent_1_NoIdent()
+        #{
+        #    str s = @'ABC  ';
+        #
+        #    this.assertEquals('ABC  ', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_Blank
+        #void testChangeIdent_Blank()
+        #{
+        #    str s = @'
+        #    ABC
+        #
+        #        123
+        #456
+        #    ';
+        #
+        #    this.assertEquals('\nABC\n\n    123\n456\n', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_Empty
+        #void testChangeIdent_Empty()
+        #{
+        #    str s = '';
+        #
+        #    this.assertEquals('', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_First
+        #void testChangeIdent_First()
+        #{
+        #    str s = @'  ABC
+        #    123
+        #    456
+        #';
+        #
+        #    this.assertEquals('ABC\n123\n456\n', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_Last
+        #void testChangeIdent_Last()
+        #{
+        #    str s = @'ABC
+        #    123
+        #    456  ';
+        #
+        #    this.assertEquals('ABC\n123\n456  ', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_OverIdent
+        #void testChangeIdent_OverIdent()
+        #{
+        #    str s = @'
+        #    ABC
+        #        123
+        #456
+        #    ';
+        #
+        #    this.assertEquals('\nABC\n    123\n456\n', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_UnderIdent
+        #void testChangeIdent_UnderIdent()
+        #{
+        #    str s = @'
+        #        ABC
+        #            123
+        #        456
+        #    ';
+        #
+        #    this.assertEquals('\n    ABC\n        123\n    456\n', String::changeIdent(s, -4));
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent
+        #void testTrimIdent()
+        #{
+        #    str s = @'
+        #    ABC
+        #        123
+        #    456
+        #    ';
+        #
+        #    this.assertEquals('ABC\n    123\n456', String::trimIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_1
+        #void testTrimIdent_1()
+        #{
+        #    str s = @'  ABC';
+        #
+        #    this.assertEquals('ABC', String::trimIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_1_Blank
+        #void testTrimIdent_1_Blank()
+        #{
+        #    str s = @'  ';
+        #
+        #    this.assertEquals('', String::trimIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_1_NoIdent
+        #void testTrimIdent_1_NoIdent()
+        #{
+        #    str s = @'ABC  ';
+        #
+        #    this.assertEquals('ABC  ', String::trimIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_BlankLine
+        #void testTrimIdent_BlankLine()
+        #{
+        #    str s = @'
+        #    ABC
+        #
+        #        123
+        #456
+        #    ';
+        #
+        #    this.assertEquals('    ABC\n\n        123\n456', String::trimIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_Empty
+        #void testTrimIdent_Empty()
+        #{
+        #    str s = '';
+        #
+        #    this.assertEquals('', String::trimIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_First
+        #void testTrimIdent_First()
+        #{
+        #    str s = @'  ABC
+        #    123
+        #    456
+        #';
+        #
+        #    this.assertEquals('ABC\n  123\n  456', String::trimIdent(s));
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_Last
+        #void testTrimIdent_Last()
+        #{
+        #    str s = @'ABC
+        #    123
+        #    456  ';
+        #
+        #    this.assertEquals('ABC\n    123\n    456  ', String::trimIdent(s));
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: SysText unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #SysText
+    PROPERTIES
+      Name                #SysText
+      Extends             #TextBuffer
+      RunOn               #Called from
+    ENDPROPERTIES
+    
+    METHODS
+      Version: 3
+      SOURCE #classDeclaration
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #class SysText extends TextBuffer
+        #{
+        #}
+      ENDSOURCE
+      SOURCE #toString
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #// используем toString родителя, чтобы отображать в отладчике
+        #public str toString()
+        #{
+        #    str ret = super();
+        #
+        #    return ret;
+        #}
+      ENDSOURCE
+      SOURCE #calcIdent
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #// рассчитывает отступ, который применим для каждой строки в многострочном тексте
+        #// табуляцию рассматривает как непробельный значащий символ
+        #public static int calcIdent(TextBuffer text)
+        #{
+        #    int ident;
+        #    int lineIdent = 0;
+        #    int startPos = 1;
+        #
+        #    if( text == null )
+        #        return 0;
+        #
+        #    if( text.size() == 0 )
+        #        return 0;
+        #
+        #    ident = maxint();
+        #
+        #    ///////////////////
+        #    if( text.find('< +') )
+        #    {
+        #        lineIdent = text.matchLen();
+        #        startPos = text.matchPos() + text.matchLen();
+        #    }
+        #
+        #    while( text.find('\n *', startPos) )
+        #    {
+        #        if( lineIdent < ident && startPos != text.matchPos() )
+        #        {
+        #            ident = lineIdent;
+        #        }
+        #
+        #        lineIdent = text.matchLen() - 1;
+        #        startPos = text.matchPos() + text.matchLen();
+        #    }
+        #
+        #    if( lineIdent < ident && startPos <= text.size() )
+        #    {
+        #        ident = lineIdent;
+        #    }
+        #    else if( ident == maxint() )
+        #    {
+        #        ident = 0; //lineIdent;
+        #    }
+        #
+        #    return ident;
+        #}
+      ENDSOURCE
+      SOURCE #changeIdent
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #// добавляет или удаляет отступ, который применим для каждой строки в многострочном тексте
+        #// табуляцию рассматривает как непробельный значащий символ
+        #public static TextBuffer changeIdent(TextBuffer text, int identOffset)
+        #{
+        #    TextBuffer ret = new TextBuffer();
+        #    int startPos = 1;
+        #    str ident = '';
+        #    int lineIdent;
+        #    str s;
+        #
+        #    if( text == null )
+        #        return ret;
+        #
+        #    if( text.size() == 0 )
+        #        return ret;
+        #
+        #    /////////////////////
+        #    if( identOffset > 0 )
+        #    {
+        #        ident = strrep(' ', identOffset);
+        #        identOffset = 0;
+        #    }
+        #    else
+        #    {
+        #        identOffset = -identOffset;
+        #    }
+        #
+        #    if( text.find('< +') )
+        #    {
+        #        lineIdent = max(0, text.matchLen() - identOffset);
+        #        startPos = text.matchPos() + text.matchLen();
+        #    }
+        #
+        #    while( text.find('\n *', startPos) )
+        #    {
+        #        if( startPos <= text.matchPos() )
+        #        {
+        #            s = text.subStr(startPos - lineIdent, text.matchPos() - startPos + lineIdent + 1);
+        #        }
+        #        else
+        #        {
+        #            s = '\n';
+        #        }
+        #        ret.appendText(s);
+        #
+        #        if( ident )
+        #        {
+        #            ret.appendText(ident);
+        #        }
+        #
+        #        lineIdent = max(0, text.matchLen() - 1 - identOffset);
+        #        startPos = text.matchPos() + text.matchLen();
+        #    }
+        #
+        #    if( startPos <= text.size() )
+        #    {
+        #        s = text.subStr(startPos - lineIdent, text.size() - startPos + lineIdent + 1);
+        #        ret.appendText(s);
+        #    }
+        #
+        #    return ret;
+        #}
+      ENDSOURCE
+      SOURCE #construct
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #public static SysText construct(str s = '')
+        #{
+        #    SysText text = new SysText();
+        #
+        #    if( s )
+        #    {
+        #        text.setText(s);
+        #    }
+        #
+        #    return text;
+        #}
+      ENDSOURCE
+      SOURCE #fromTextBuffer
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #public static SysText fromTextBuffer(TextBuffer _text)
+        #{
+        #    SysText text = new SysText();
+        #
+        #    if( _text && _text.size() )
+        #    {
+        #        text.setText(_text.getText());
+        #    }
+        #
+        #    return text;
+        #}
+      ENDSOURCE
+      SOURCE #trimIdent
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #// удаляет отступ, который применим для каждой строки в многострочном тексте
+        #// табуляцию рассматривает как непробельный значащий символ
+        #// работает как trimIdent в Kotlin, https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/trim-indent.html
+        #// см. также https://openjdk.java.net/jeps/355
+        #public static TextBuffer trimIdent(TextBuffer text)
+        #{
+        #    TextBuffer  ret         = new TextBuffer();
+        #    int         startPos    = 1;
+        #    int         endPos;
+        #    int         ident;
+        #;
+        #    if( text == null )
+        #        return ret;
+        #
+        #    if( text.size() == 0 )
+        #        return ret;
+        #
+        #    endPos = text.size();
+        #    ident = SysText::calcIdent(text);
+        #
+        #    // удаляем первую пустую или пробельную строку
+        #    if( text.find('< *\n') )
+        #        startPos = text.matchPos() + text.matchLen();
+        #
+        #    // удаляем последнюю пустую или пробельную строку
+        #    if( text.find('\n *>') )
+        #        endPos = text.matchPos() - 1;
+        #
+        #    // TODO можно ли обойтись без копирования текста, а просто передать startPos, endPos в changeIdent?
+        #    ret = SysText::construct(text.subStr(startPos, endPos - startPos + 1));
+        #
+        #    ret = SysText::changeIdent(ret, -ident);
+        #
+        #    return ret;
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: SysTextTest unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #SysTextTest
+    PROPERTIES
+      Name                #SysTextTest
+      Extends             #SysTestCase
+      RunOn               #Called from
+    ENDPROPERTIES
+    
+    METHODS
+      Version: 3
+      SOURCE #classDeclaration
+        #//
+        #// mazzy, https://github.com/mazzy-ax/SysString
+        #//
+        #class SysTextTest extends SysTestCase
+        #{
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent
+        #void testCalcIdent()
+        #{
+        #    SysText text = SysText::construct(@'
+        #                ABC
+        #                    123
+        #                456
+        #    ');
+        #
+        #    this.assertEquals(16, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_1
+        #void testCalcIdent_1()
+        #{
+        #    SysText text = SysText::construct(@'  ABC');
+        #
+        #    this.assertEquals(2, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_1_Blank
+        #void testCalcIdent_1_Blank()
+        #{
+        #    SysText text = SysText::construct(@'  ');
+        #
+        #    this.assertEquals(0, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_1_NoIdent
+        #void testCalcIdent_1_NoIdent()
+        #{
+        #    SysText text = SysText::construct(@'ABC  ');
+        #
+        #    this.assertEquals(0, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_2_Blank
+        #void testCalcIdent_2_Blank()
+        #{
+        #    SysText text = SysText::construct(@'
+        #    ');
+        #
+        #    this.assertEquals(0, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_3_Blank
+        #void testCalcIdent_3_Blank()
+        #{
+        #    SysText text = SysText::construct(@'
+        #
+        #    ');
+        #
+        #    this.assertEquals(0, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_4_Blank
+        #void testCalcIdent_4_Blank()
+        #{
+        #    SysText text = SysText::construct(@'
+        #
+        #
+        #    ');
+        #
+        #    this.assertEquals(0, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_Blank
+        #void testCalcIdent_Blank()
+        #{
+        #    SysText text = SysText::construct(@'
+        #                ABC
+        #
+        #                    123
+        #                456
+        #    ');
+        #
+        #    this.assertEquals(16, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_Disorder
+        #void testCalcIdent_Disorder()
+        #{
+        #    SysText text = SysText::construct(@'
+        #                 ABC
+        #                  123
+        #               456
+        #        ');
+        #
+        #    this.assertEquals(15, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_Empty
+        #void testCalcIdent_Empty()
+        #{
+        #    SysText text = SysText::construct('');
+        #
+        #    this.assertEquals(0, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_First
+        #void testCalcIdent_First()
+        #{
+        #    SysText text = SysText::construct(@'  ABC
+        #                123
+        #                456
+        #        ');
+        #
+        #    this.assertEquals(2, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_First_NoIdent
+        #void testCalcIdent_First_NoIdent()
+        #{
+        #    SysText text = SysText::construct(@'0  ABC
+        #                123
+        #                456
+        #        ');
+        #
+        #    this.assertEquals(0, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_Last
+        #void testCalcIdent_Last()
+        #{
+        #    SysText text = SysText::construct(@'
+        #                ABC
+        #                123
+        #    456');
+        #
+        #    this.assertEquals(4, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_NoIdent
+        #void testCalcIdent_NoIdent()
+        #{
+        #    SysText text = SysText::construct(@'
+        #ABC
+        #123
+        #456
+        #        ');
+        #
+        #    this.assertEquals(0, SysText::calcIdent(text));
+        #}
+      ENDSOURCE
+      SOURCE #testCalcIdent_Null
+        #void testCalcIdent_Null()
+        #{
+        #    this.assertEquals(0, SysText::calcIdent(null));
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent
+        #void testChangeIdent()
+        #{
+        #    SysText text = SysText::construct(@'
+        #    ABC
+        #        123
+        #    456
+        #    ');
+        #
+        #    this.assertEquals('\nABC\n    123\n456\n', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_1
+        #void testChangeIdent_1()
+        #{
+        #    SysText text = SysText::construct(@'  ABC');
+        #
+        #    this.assertEquals('ABC', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_1_Blank
+        #void testChangeIdent_1_Blank()
+        #{
+        #    SysText text = SysText::construct(@'  ');
+        #
+        #    this.assertEquals('', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_1_NoIdent
+        #void testChangeIdent_1_NoIdent()
+        #{
+        #    SysText text = SysText::construct(@'ABC  ');
+        #
+        #    this.assertEquals('ABC  ', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_Blank
+        #void testChangeIdent_Blank()
+        #{
+        #    SysText text = SysText::construct(@'
+        #    ABC
+        #
+        #        123
+        #456
+        #    ');
+        #
+        #    this.assertEquals('\nABC\n\n    123\n456\n', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_Empty
+        #void testChangeIdent_Empty()
+        #{
+        #    SysText text = SysText::construct('');
+        #
+        #    this.assertEquals('', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_First
+        #void testChangeIdent_First()
+        #{
+        #    SysText text = SysText::construct(@'  ABC
+        #    123
+        #    456
+        #');
+        #
+        #    this.assertEquals('ABC\n123\n456\n', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_Last
+        #void testChangeIdent_Last()
+        #{
+        #    SysText text = SysText::construct(@'ABC
+        #    123
+        #    456  ');
+        #
+        #    this.assertEquals('ABC\n123\n456  ', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_Null
+        #void testChangeIdent_Null()
+        #{
+        #    this.assertEquals('', SysText::changeIdent(null, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_OverIdent
+        #void testChangeIdent_OverIdent()
+        #{
+        #    SysText text = SysText::construct(@'
+        #    ABC
+        #        123
+        #456
+        #    ');
+        #
+        #    this.assertEquals('\nABC\n    123\n456\n', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testChangeIdent_UnderIdent
+        #void testChangeIdent_UnderIdent()
+        #{
+        #    SysText text = SysText::construct(@'
+        #        ABC
+        #            123
+        #        456
+        #    ');
+        #
+        #    this.assertEquals('\n    ABC\n        123\n    456\n', SysText::changeIdent(text, -4).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent
+        #void testTrimIdent()
+        #{
+        #    SysText text = SysText::construct(@'
+        #    ABC
+        #        123
+        #    456
+        #    ');
+        #
+        #    this.assertEquals('ABC\n    123\n456', SysText::trimIdent(text).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_1
+        #void testTrimIdent_1()
+        #{
+        #    SysText text = SysText::construct(@'  ABC');
+        #
+        #    this.assertEquals('ABC', SysText::trimIdent(text).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_1_Blank
+        #void testTrimIdent_1_Blank()
+        #{
+        #    SysText text = SysText::construct(@'  ');
+        #
+        #    str res = SysText::trimIdent(text).getText();
+        #
+        #    this.assertEquals(0, strlen(res));
+        #    this.assertEquals('', res);
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_1_NoIdent
+        #void testTrimIdent_1_NoIdent()
+        #{
+        #    SysText text = SysText::construct(@'ABC  ');
+        #
+        #    this.assertEquals('ABC  ', SysText::trimIdent(text).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_2_Blank
+        #void testTrimIdent_2_Blank()
+        #{
+        #    SysText text = SysText::construct(@'
+        #    ');
+        #
+        #    str res = SysText::trimIdent(text).getText();
+        #
+        #    this.assertEquals(0, strlen(res));
+        #    this.assertEquals('', res);
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_3_Blank
+        #void testTrimIdent_3_Blank()
+        #{
+        #    SysText text = SysText::construct(@'
+        #
+        #    ');
+        #
+        #    str res = SysText::trimIdent(text).getText();
+        #
+        #    this.assertEquals(0, strlen(res));
+        #    this.assertEquals('', res);
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_4_Blank
+        #void testTrimIdent_4_Blank()
+        #{
+        #    SysText text = SysText::construct(@'
+        #
+        #
+        #    ');
+        #
+        #    str res = SysText::trimIdent(text).getText();
+        #
+        #    this.assertEquals(1, strlen(res));
+        #    this.assertEquals(10, char2num(res, 1));
+        #    this.assertEquals('\n', res);
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_BlankLine
+        #void testTrimIdent_BlankLine()
+        #{
+        #    SysText text = SysText::construct(@'
+        #    ABC
+        #
+        #        123
+        #456
+        #    ');
+        #
+        #    this.assertEquals('    ABC\n\n        123\n456', SysText::trimIdent(text).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_Empty
+        #void testTrimIdent_Empty()
+        #{
+        #    SysText text = SysText::construct('');
+        #
+        #    this.assertEquals('', SysText::trimIdent(text).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_First
+        #void testTrimIdent_First()
+        #{
+        #    SysText text = SysText::construct(@'  ABC
+        #    123
+        #    456
+        #');
+        #
+        #    this.assertEquals('ABC\n  123\n  456', SysText::trimIdent(text).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_Last
+        #void testTrimIdent_Last()
+        #{
+        #    SysText text = SysText::construct(@'ABC
+        #    123
+        #    456  ');
+        #
+        #    this.assertEquals('ABC\n    123\n    456  ', SysText::trimIdent(text).getText());
+        #}
+      ENDSOURCE
+      SOURCE #testTrimIdent_Null
+        #void testTrimIdent_Null()
+        #{
+        #    this.assertEquals('', SysText::trimIdent(null).getText());
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: PRN
+
+; Microsoft Dynamics AX Project : SysString unloaded
+; --------------------------------------------------------------------------------
+  PROJECTVERSION 2
+  
+  PROJECT #SysString
+   SHARED
+  PROPERTIES
+    Name                #SysString
+  ENDPROPERTIES
+  
+    PROJECTCLASS ProjectNode
+    BEGINNODE
+      FILETYPE 0
+      UTILTYPE 45
+      UTILOBJECTID 55294
+      NODETYPE 329
+      NAME #String
+    ENDNODE
+    BEGINNODE
+      FILETYPE 0
+      UTILTYPE 45
+      UTILOBJECTID 55295
+      NODETYPE 329
+      NAME #StringTest
+    ENDNODE
+    BEGINNODE
+      FILETYPE 0
+      UTILTYPE 45
+      UTILOBJECTID 55298
+      NODETYPE 329
+      NAME #SysText
+    ENDNODE
+    BEGINNODE
+      FILETYPE 0
+      UTILTYPE 45
+      UTILOBJECTID 55297
+      NODETYPE 329
+      NAME #SysTextTest
+    ENDNODE
+  ENDPROJECT
+  
+
+***Element: END

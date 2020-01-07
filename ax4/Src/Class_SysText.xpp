@@ -58,7 +58,7 @@ class SysText extends TextBuffer
         }
         else if( ident == maxint() )
         {
-            ident = 0; //lineIdent;
+            ident = 0;
         }
 
         return ident;
@@ -192,7 +192,7 @@ class SysText extends TextBuffer
             endPos = text.matchPos() - 1;
 
         // TODO можно ли обойтись без копирования текста, а просто передать startPos, endPos в changeIdent?
-        ret = SysText::construct(text.subStr(startPos, endPos - startPos + 1));
+        ret.setText(text.subStr(startPos, endPos - startPos + 1));
 
         ret = SysText::changeIdent(ret, -ident);
 
